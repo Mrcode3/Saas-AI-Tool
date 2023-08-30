@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, Download } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card, CardFooter } from "@/components/ui/card";
+import Image from "next/image";
 
 const formSchema = z.object({
   prompt: z.string().min(1, { message: "Image prompt is required" }),
@@ -195,17 +197,37 @@ const PhotoPage = () => {
             </Button>
           </form>
         </Form>
-      </div>
-      <div className="space-y-4 mt-4">
-        {isLoading && (
-          <div className="p-20">
-            <Loading />
+        <div className="space-y-4 mt-4">
+          {isLoading && (
+            <div className="p-20">
+              <Loading />
+            </div>
+          )}
+          {images.length === 0 && !isLoading && (
+            <Empty label="No images generated" />
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
+            {images.map((src) => {
+              return (
+                <Card key={src} className="rounded-lg overflow-hidden">
+                  <div className="relative aspect-square">
+                    <Image src={src} alt="image" fill />
+                  </div>
+                  <CardFooter className="p-2">
+                    <Button
+                      className="w-full"
+                      variant="secondary"
+                      onClick={() => window.open(src)}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download
+                    </Button>
+                  </CardFooter>
+                </Card>
+              );
+            })}
           </div>
-        )}
-        {images.length === 0 && !isLoading && (
-          <Empty label="No images generated" />
-        )}
-        <div>Image here</div>
+        </div>
       </div>
     </div>
   );
