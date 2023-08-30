@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MessageSquare } from "lucide-react";
+import { Code } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
@@ -23,12 +23,13 @@ import Loading from "@/components/Loading";
 import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
+import ReactMarkdown from "react-markdown";
 
 const formSchema = z.object({
   prompt: z.string().min(1, { message: "Prompt is required" }),
 });
 
-const ConversationPage = () => {
+const CodePage = () => {
   const router = useRouter();
   const [messages, setMessages] = useState<
     OpenAI.Chat.Completions.CreateChatCompletionRequestMessage[]
@@ -53,7 +54,7 @@ const ConversationPage = () => {
 
       const newMessages = [...messages, userMessage];
 
-      const response = await axios.post("/api/conversation", {
+      const response = await axios.post("/api/code", {
         messages: newMessages,
       });
 
@@ -71,11 +72,11 @@ const ConversationPage = () => {
   return (
     <div>
       <Heading
-        title="Conversation"
-        description="Our most advanced conversation model."
-        icon={MessageSquare}
-        iconColor="text-violet-500"
-        bgColor="bg-violet-500/10"
+        title="Code Generation"
+        description="Generate code using descriptive text."
+        icon={Code}
+        iconColor="text-green-700"
+        bgColor="bg-green-700/10"
       />
       <div className="px-4 lg:px-8 ">
         <Form {...form}>
@@ -92,7 +93,7 @@ const ConversationPage = () => {
                       {...field}
                       disabled={isLoading}
                       className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
-                      placeholder="How to explain superconductors?"
+                      placeholder="Simple toggle button using react hooks."
                     />
                   </FormControl>
                   <FormMessage />
@@ -127,7 +128,21 @@ const ConversationPage = () => {
                 )}
               >
                 {msg.role === "user" ? <UserAvatar /> : <BotAvatar />}
-                <p className="text-sm">{msg.content}</p>
+                <ReactMarkdown
+                  components={{
+                    pre: ({ node, ...props }) => (
+                      <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                        <pre {...props} />
+                      </div>
+                    ),
+                    code: ({ node, ...props }) => (
+                      <code className="bg-black/10 rounded-lg p-1" {...props} />
+                    ),
+                  }}
+                  className="text-sm overflow-hidden leading-7"
+                >
+                  {msg.content || ""}
+                </ReactMarkdown>
               </div>
             );
           })}
@@ -137,4 +152,4 @@ const ConversationPage = () => {
   );
 };
 
-export default ConversationPage;
+export default CodePage;
