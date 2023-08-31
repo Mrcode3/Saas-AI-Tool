@@ -18,7 +18,6 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import Empty from "@/components/Empty";
 import Loading from "@/components/Loading";
-import { cn } from "@/lib/utils";
 import { useState } from "react";
 import {
   Select,
@@ -29,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const formSchema = z.object({
   prompt: z.string().min(1, { message: "Image prompt is required" }),
@@ -76,6 +76,8 @@ const resolutionOptions = [
 
 const PhotoPage = () => {
   const router = useRouter();
+  const proModal = useProModal();
+
   const [images, setImages] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -100,8 +102,10 @@ const PhotoPage = () => {
 
       setImages(urls);
       form.reset();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error?.response.starus === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

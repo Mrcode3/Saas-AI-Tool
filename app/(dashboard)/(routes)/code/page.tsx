@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
 import ReactMarkdown from "react-markdown";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const formSchema = z.object({
   prompt: z.string().min(1, { message: "Prompt is required" }),
@@ -31,6 +32,7 @@ const formSchema = z.object({
 
 const CodePage = () => {
   const router = useRouter();
+  const proModal = useProModal();
   const [messages, setMessages] = useState<
     OpenAI.Chat.Completions.CreateChatCompletionRequestMessage[]
   >([]);
@@ -62,8 +64,10 @@ const CodePage = () => {
 
       setMessages((cur) => [...cur, userMessage, response.data]);
       form.reset();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }

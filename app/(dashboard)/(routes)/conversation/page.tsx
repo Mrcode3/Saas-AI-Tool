@@ -23,12 +23,15 @@ import Loading from "@/components/Loading";
 import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const formSchema = z.object({
   prompt: z.string().min(1, { message: "Prompt is required" }),
 });
 
 const ConversationPage = () => {
+  const proModal = useProModal();
+
   const router = useRouter();
   const [messages, setMessages] = useState<
     OpenAI.Chat.Completions.CreateChatCompletionRequestMessage[]
@@ -61,8 +64,10 @@ const ConversationPage = () => {
 
       setMessages((cur) => [...cur, userMessage, response.data]);
       form.reset();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error?.response.starus === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }
