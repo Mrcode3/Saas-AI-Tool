@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
 import { useProModal } from "@/hooks/use-pro-modal";
+import { toast } from "react-hot-toast";
 
 const formSchema = z.object({
   prompt: z.string().min(1, { message: "Prompt is required" }),
@@ -65,8 +66,10 @@ const ConversationPage = () => {
       setMessages((cur) => [...cur, userMessage, response.data]);
       form.reset();
     } catch (error: any) {
-      if (error?.response.starus === 403) {
+      if (error?.response?.status === 403) {
         proModal.onOpen();
+      } else {
+        toast.error("Something went wrong");
       }
     } finally {
       router.refresh();
