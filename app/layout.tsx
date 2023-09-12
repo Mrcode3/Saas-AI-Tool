@@ -10,7 +10,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
 	title: "Imaginex",
-	description: "AI platform",
+	icons: {
+		icon: "/logo.png",
+	},
 };
 
 export default function RootLayout({
