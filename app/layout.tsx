@@ -9,25 +9,25 @@ import CrispPrivider from "@/components/CrispPrivider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AI Power",
-  description: "AI platform",
+	title: "Imaginex",
+	description: "AI platform",
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <CrispPrivider />
-          <ToasterProvider />
-          <ModalProvider />
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
-  );
+	return (
+		<ClerkProvider>
+			<html lang="en">
+				<body className={inter.className}>
+					<CrispPrivider />
+					<ToasterProvider />
+					<ModalProvider />
+					{children}
+				</body>
+			</html>
+		</ClerkProvider>
+	);
 }

@@ -11,27 +11,27 @@ import { Button } from "@/components/ui/button";
 const font = Montserrat({ weight: "600", subsets: ["latin"] });
 
 const LandingNavbar = () => {
-  const { isSignedIn } = useAuth();
+	const { isSignedIn } = useAuth();
 
-  return (
-    <nav className=" bg-transparent p-4 flex items-center justify-between shadow-[0_10px_250px_rgba(240,_46,_170,_0.7)] rounded-full">
-      <Link href="/" className="flex items-center">
-        <div className="relative h-8 w-8 mr-4">
-          <Image src="/logo.svg" alt="Logo" width={35} height={35} />
-        </div>
-        <h1 className={cn("text-2xl font-bold text-white", font.className)}>
-          Imaginex
-        </h1>
-      </Link>
-      <div>
-        <Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
-          <Button variant={"outline"} className="rounded-full">
-            Get Started
-          </Button>
-        </Link>
-      </div>
-    </nav>
-  );
+	return (
+		<nav className="flex items-center justify-between p-4 rounded-sm ">
+			<Link href="/" className="flex items-center">
+				<div className="relative w-8 h-8 mr-4">
+					<Image src="/logo.png" alt="Logo" width={45} height={45} />
+				</div>
+				<h1 className={cn("text-2xl font-bold text-white", font.className)}>
+					Imaginex
+				</h1>
+			</Link>
+			<div>
+				<Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
+					<Button variant={"outline"} className="rounded-full">
+						Get Started
+					</Button>
+				</Link>
+			</div>
+		</nav>
+	);
 };
 
 export default LandingNavbar;
